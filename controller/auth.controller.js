@@ -76,6 +76,14 @@ exports.login = async (req, res, next) => {
       })
     }
     if (req._id) {
+      const checkUser = await User.findOne({ phone });
+      if (checkUser) {
+        return res.status(200).json({
+          resCode: 1,
+          message: "EXIST_PHONE",
+          screenId: 15
+        })
+      }
       const user = await User.findOneAndUpdate({ _id: req._id }, { phone, countryCode }, { new: true });
       if (!user) {
         throw new Error('something went wrong')
