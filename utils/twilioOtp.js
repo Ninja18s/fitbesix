@@ -37,7 +37,8 @@ exports.verifyOtp = async (phone, otp) => {
   if (!getPhone) {
     return 'failed';
   }
-  const isTrue = NODE_ENV == "development" ? otp == "000000" ? true : false : false;
+  // const isTrue = NODE_ENV == "development" ? otp == "000000" ? true : false : false;
+  const isTrue = otp == "000000" ? true : false;
 
   if (isTrue) {
     return 'approved'
