@@ -1,6 +1,5 @@
 const express = require("express");
 const cors = require("cors");
-const interceptor = require('express-interceptor');
 require("dotenv").config();
 const logs = require('./utils/logger/logs')
 const logger = require('./utils/logger');
@@ -14,6 +13,7 @@ require('./db/mongoose');
 
 // routes
 const authRoutes = require("./router/auth.route");
+const countryRoutes = require('./router/country.route');
 
 
 // init express app
@@ -61,6 +61,7 @@ app.use("*", fixResponse)
 
 
 app.use("/api/auth", authRoutes);
+app.use("/api/country", countryRoutes);
 
 
 

@@ -11,6 +11,12 @@ const messageMap = {
 
 const fixResponse = (req, res, next) => {
     const languageCode = req.headers['language'];
+    if (languageCode === undefined) {
+        res.status(404).send({
+            resCode: 1,
+            msg: "header missing"
+        })
+    }
     const originJson = res.json
 
     res.json = (jsonData) => {
