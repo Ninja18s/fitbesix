@@ -41,18 +41,21 @@ exports.sendOtp = async (req, res, next) => {
 exports.login = async (req, res, next) => {
 
   const { phone, countryCode } = req.body
-  const verified = await verifyOtp(req.body.countryCode + req.body.phone, req.body.otp);
-  if (!(verified == "approved")) {
-
-    return res.status(403).json({
-      resCode: 1,
-      message: "INCORRECT_OTP",
-
-    })
-
-  }
-
   try {
+    if (!(phone && countryCode)) {
+      throw new Error("missing field");
+    }
+    const verified = await verifyOtp(req.body.countryCode + req.body.phone, req.body.otp);
+    if (!(verified == "approved")) {
+
+      return res.status(403).json({
+        resCode: 1,
+        message: "INCORRECT_OTP",
+
+      })
+
+    }
+
     if (req.body.email) {
       const user = await User.findOneAndUpdate({ email: req.body.email }, { phone, countryCode });
       if (!user) {
@@ -69,6 +72,20 @@ exports.login = async (req, res, next) => {
         token,
         screenId: 16
 
+
+      })
+    }
+    if (req._id) {
+      const user = await User.findOneAndUpdate({ _id: req._id }, { phone, countryCode }, { new: true });
+      if (!user) {
+        throw new Error('something went wrong')
+      }
+      return res.status(200).json({
+        resCode: 0,
+        message: "UPDATE_PHONE",
+
+        userId: user._id,
+        screenId: 16
 
       })
     }

@@ -11,7 +11,8 @@ const MESSAGE = {
     "SUCCESS_PHONE": ["phone successfully registered -AR", "phone successfully registered -EN"],
     "USER_NOT_FOUND": ["user not found -AR", "user not found -EN"],
     "SUCCESS_USER": ["user successfully created -AR", "user successfully created -EN"],
-    "SUCCESS": ["successfully -AR", "successfully -EN"]
+    "SUCCESS": ["success -AR", "success -EN"],
+    "UPDATE_PHONE": ["phone number successfully updated -AR", "update phone number successfully updated -EN"],
 
 }
 
