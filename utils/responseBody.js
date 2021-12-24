@@ -26,7 +26,7 @@ const fixResponse = (req, res, next) => {
 
         const fixedResponse = {
 
-            resCode: jsonData.resCode,
+            code: jsonData.resCode,
             response: tempObj,
             resStr: messageMap[jsonData.resCode]
 
