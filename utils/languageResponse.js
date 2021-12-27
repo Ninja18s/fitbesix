@@ -11,10 +11,11 @@ const MESSAGE = {
     "SUCCESS_PHONE": ["phone successfully registered -AR", "phone successfully registered -EN"],
     "USER_NOT_FOUND": ["user not found -AR", "user not found -EN"],
     "SUCCESS_USER": ["user successfully created -AR", "user successfully created -EN"],
-    "SUCCESS": ["success -AR", "success -EN"],
+    "SUCCESS": ["successfully done -AR", "successfully done -EN"],
     "UPDATE_PHONE": ["phone number successfully updated -AR", "update phone number successfully updated -EN"],
     "EXIST_PHONE": ["phone number already exists try another one -AR", "phone number already exists try another one-EN"],
-
+    "FAILED": ["failed-AR", "failed-En"],
+    "EXIST_EMAIL": ["email already exists try another one-AR", "email already exists try another one-EN"]
 }
 
 exports.languageFlag = (message, languageCode) => {

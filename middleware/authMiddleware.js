@@ -1,5 +1,6 @@
 const jwt = require('jsonwebtoken');
 const User = require('../models/user.model');
+const { JWT_key } = require('../config');
 const logger = require('../utils/logger');
 
 
@@ -10,24 +11,32 @@ const authMiddleware = async (req, res, next) => {
     try {
         if (!token) {
             logger.error('token missing')
-            return res.status(403).send({
-                resCode: 0,
-                msg: 'missing token'
-            })
+            throw new Error('token missing')
         }
 
 
 
-        const decoded = jwt.verify(token, 'ice-cream');
 
+        const decoded = jwt.verify(token, JWT_key, function (err, decoded) {
+            if (err) {
 
+                throw new Error("token expire")
+            }
+            return decoded
+        });
+        if (!decoded) {
+            throw new Error('token expired')
+        }
 
         const _id = decoded._id;
 
-        const user = await User.findOne({ _id, 'tokens.token': token });
+        const user = await User.findOne({ _id, token });
 
         if (!user) {
             throw new Error('unauthorized ');
+        }
+        if (user.isBlacklisted) {
+            throw new Error('user is blacklisted');
         }
         req._id = _id;
 

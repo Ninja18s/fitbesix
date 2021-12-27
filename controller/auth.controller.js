@@ -3,7 +3,6 @@ const { OAuth2Client } = require('google-auth-library');
 const CLIENT_ID = "703025992612-m9i8pf8k29hvfua833srl8cmo4rtp3bt.apps.googleusercontent.com"
 const jwksClient = require('jwks-rsa');
 const jwt = require('jsonwebtoken');
-const { languageFlag } = require('../utils/languageResponse');
 const logger = require('../utils/logger');
 
 
@@ -11,8 +10,6 @@ const { sendOtp, verifyOtp } = require("../utils/twilioOtp");
 
 exports.sendOtp = async (req, res, next) => {
   const { phone, countryCode } = req.body;
-
-
 
   try {
     if (!(phone && countryCode)) {
@@ -41,6 +38,7 @@ exports.sendOtp = async (req, res, next) => {
 exports.login = async (req, res, next) => {
 
   const { phone, countryCode } = req.body
+
   try {
     if (!(phone && countryCode)) {
       throw new Error("missing field");
@@ -59,10 +57,16 @@ exports.login = async (req, res, next) => {
     if (req.body.email) {
       const user = await User.findOneAndUpdate({ email: req.body.email }, { phone, countryCode });
       if (!user) {
-        const errMsg = languageFlag("USER_NOT_FOUND", languageCode);
-        throw new Error(errMsg)
+
+        return res.status(500).json({
+          resCode: 0,
+          message: "USER_NOT_FOUND",
+
+        })
+
       }
       const token = await user.generateToken();
+      const refreshToken = await user.generateRefreshToken();
 
       return res.status(201).json({
         resCode: 0,
@@ -70,6 +74,7 @@ exports.login = async (req, res, next) => {
 
         userId: user._id,
         token,
+        refreshToken,
         screenId: 16
 
 
@@ -104,12 +109,13 @@ exports.login = async (req, res, next) => {
     }
 
     const token = await createUser.generateToken();
-
+    const refreshToken = await createUser.generateRefreshToken();
     if (!(createUser.email && createUser.name)) {
 
       return res.status(200).json({
         resCode: 0,
-        token: token,
+        token,
+        refreshToken,
         screenId: 18,
         message: "MISSING_EMAIL"
       })
@@ -119,6 +125,7 @@ exports.login = async (req, res, next) => {
     return res.status(200).json({
       resCode: 0,
       token: token,
+      refreshToken,
       screenId: 16,
       message: "LOGGED_IN"
     })
@@ -135,6 +142,14 @@ exports.doRegister = async (req, res, next) => {
 
   const updates = Object.keys(req.body);
   try {
+    const checkExist = await User.findOne({ email: req.body.email });
+    if (checkExist) {
+      return res.status(403).json({
+        resCode: 1,
+        message: "EXIST_EMAIL"
+      })
+
+    }
     const user = await User.findOne({ _id: req._id })
     if (!user) {
       throw new Error("User not found ");
@@ -162,6 +177,22 @@ exports.doRegister = async (req, res, next) => {
     logger.error(error);
     next(error)
   }
+}
+
+exports.doGenerateToken = async (req, res, next) => {
+  const { refreshToken } = req.body;
+  const userId = await User.verifyRefreshToken(refreshToken);
+  const user = await User.findById(userId);
+  const token = await user.generateToken();
+  const refToken = await user.generateRefreshToken();
+  return res.status(200).json({
+    resCode: 0,
+    userId: user._id,
+    token,
+    refreshToken: refToken,
+    message: "SUCCESS",
+    screenId: 16
+  })
 }
 
 //todo: third party login ----------------------------------------------------------------
@@ -238,6 +269,7 @@ exports.thirdpartyLogin = async (req, res, next) => {
       }
 
       const token = await createUser.generateToken();
+      const refreshToken = await createUser.generateRefreshToken();
 
 
 
@@ -247,7 +279,8 @@ exports.thirdpartyLogin = async (req, res, next) => {
 
         userId: createUser._id,
         screenId: 16,
-        token
+        token,
+        refreshToken,
 
       })
 
@@ -292,6 +325,7 @@ exports.thirdpartyLogin = async (req, res, next) => {
 
       }
       const token = await createUser.generateToken();
+      const refreshToken = await createUser.generateRefreshToken();
 
       return res.status(200).json({
         resCode: 0,
@@ -299,7 +333,8 @@ exports.thirdpartyLogin = async (req, res, next) => {
 
         userId: createUser._id,
         screenId: 16,
-        token
+        token,
+        refreshToken
 
       })
 
@@ -315,3 +350,27 @@ exports.thirdpartyLogin = async (req, res, next) => {
   }
 }
 
+exports.blacklist = async (req, res, next) => {
+  try {
+    const { email, phone } = payload;
+    const user = await User.findOne({ $or: [{ email: email }, { phone: phone }] });
+    if (!user) {
+      throw `user with email: ${email}  or phoneNumber: ${phone} cannot be found`;
+    }
+    user.isBlacklisted = !user.isBlacklisted;
+    await user.save()
+    return res.status(200).json({
+      resCode: 0,
+      message: "Blacklisted",
+      userId: createUser._id,
+      screenId: 16,
+      token
+    })
+
+
+  } catch (error) {
+    next(error)
+
+  }
+
+}

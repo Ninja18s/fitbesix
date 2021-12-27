@@ -1,6 +1,7 @@
 const { model, Schema } = require("mongoose");
 const validator = require("validator");
 const jwt = require("jsonwebtoken");
+const { JWT_SECRECT_key, JWT_key } = require("../config");
 const userSchema = new Schema(
   {
     name: {
@@ -38,19 +39,21 @@ const userSchema = new Schema(
       required: true,
       default: 'user'
     },
-    tokens: [{
-      token: {
-        type: String,
-        required: true
-      }
-    }],
+
+    token: {
+      type: String,
+      required: true
+    },
     provider: {
       type: String,
       enum: ['default', 'Google', 'Apple'],
       required: true,
       default: 'default',
     },
-
+    isBlacklisted: {
+      type: Boolean,
+      default: false
+    }
   },
   { timestamps: true }
 );
@@ -72,13 +75,44 @@ userSchema.methods.generateToken = async function () {
   const token = jwt.sign({
     _id: user._id.toString(),
     role: user.role
-  }, 'ice-cream', { expiresIn: 60 * 60 * 24 });
+  }, JWT_key, { expiresIn: '1d' });
 
-  user.tokens = user.tokens.concat({ token })
+  user.token = token
 
 
   await user.save();
   return token
+}
+userSchema.methods.generateRefreshToken = async function () {
+  const user = this;
+
+
+  const refreshToken = jwt.sign({
+    _id: user._id.toString(),
+    role: user.role
+  }, JWT_SECRECT_key, { expiresIn: '1y' });
+
+
+  return refreshToken;
+}
+//--watch this______----IMPORTANT---
+userSchema.statics.verifyRefreshToken = async function (refreshToken) {
+
+
+  const dedcoded = jwt.verify(refreshToken, JWT_SECRECT_key);
+  if (!dedcoded) {
+    const error = {
+      resCode: 1,
+      msg: 'token expired'
+    }
+    throw new Error(error);
+  }
+  const userId = dedcoded._id;
+
+  return userId
+
+
+
 }
 
 module.exports = model("User", userSchema);
