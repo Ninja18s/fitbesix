@@ -40,7 +40,7 @@ exports.login = async (req, res, next) => {
   const { phone, countryCode, otp } = req.body
 
   try {
-    if (!(phone && countryCode)) {
+    if (!(phone && countryCode && otp)) {
       throw new Error("missing field");
     }
     const verified = await verifyOtp(countryCode + phone, otp);
