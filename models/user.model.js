@@ -75,7 +75,7 @@ userSchema.methods.generateToken = async function () {
   const token = jwt.sign({
     _id: user._id.toString(),
     role: user.role
-  }, JWT_key, { expiresIn: '1m' });
+  }, JWT_key, { expiresIn: '10d' });
 
   user.token = token
 
