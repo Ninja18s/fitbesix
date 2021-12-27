@@ -4,3 +4,4 @@ exports.NODE_ENV = process.env.NODE_ENV || "development";
 
 exports.ORIGIN = process.env.ORIGIN;
 exports.JWT_key = process.env.JWT_key || 'this_is_secret';
+exports.JWT_SECRECT_key = process.env.JWT_SECRECT_key || 'refresh-token'

@@ -37,13 +37,13 @@ exports.sendOtp = async (req, res, next) => {
 
 exports.login = async (req, res, next) => {
 
-  const { phone, countryCode } = req.body
+  const { phone, countryCode, otp } = req.body
 
   try {
     if (!(phone && countryCode)) {
       throw new Error("missing field");
     }
-    const verified = await verifyOtp(req.body.countryCode + req.body.phone, req.body.otp);
+    const verified = await verifyOtp(countryCode + phone, otp);
     if (!(verified == "approved")) {
 
       return res.status(403).json({
