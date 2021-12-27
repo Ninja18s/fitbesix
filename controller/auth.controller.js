@@ -180,19 +180,36 @@ exports.doRegister = async (req, res, next) => {
 }
 
 exports.doGenerateToken = async (req, res, next) => {
-  const { refreshToken } = req.body;
-  const userId = await User.verifyRefreshToken(refreshToken);
-  const user = await User.findById(userId);
-  const token = await user.generateToken();
-  const refToken = await user.generateRefreshToken();
-  return res.status(200).json({
-    resCode: 0,
-    userId: user._id,
-    token,
-    refreshToken: refToken,
-    message: "SUCCESS",
-    screenId: 16
-  })
+  try {
+
+    const { refreshToken } = req.body;
+    if (!refreshToken) {
+      throw new Error('no token provided')
+    }
+    const userId = await User.verifyRefreshToken(refreshToken);
+    if (!userId) {
+      throw new Error('invalid token')
+    }
+    const user = await User.findById(userId);
+    if (!user) {
+      throw new Error('user not found')
+    }
+    const token = await user.generateToken();
+    const refToken = await user.generateRefreshToken();
+    if (!(refToken && token)) {
+      throw new Error("something went wrong");
+    }
+    return res.status(200).json({
+      resCode: 0,
+      userId: user._id,
+      token,
+      refreshToken: refToken,
+      message: "SUCCESS",
+      screenId: 16
+    })
+  } catch (error) {
+    next(error)
+  }
 }
 
 //todo: third party login ----------------------------------------------------------------
