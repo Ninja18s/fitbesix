@@ -1,21 +1,21 @@
 
 
 const MESSAGE = {
-    "LOGGED_IN": ["successfully logged in-AR", "successfully logged in-EN"],
-    "OTP_SENT": ["otp sent successfully -AR", "otp sent successfully -EN"],
-    "MISSING_PHONE": ["please register a phone number -AR", "please register a phone number -EN"],
-    "MISSING_EMAIL": ["please register a email address -AR", "please register a email address -EN"],
-    "INCORRECT_OTP": ["incorrect otp -AR", "incorrect otp -EN"],
-    "INCORRECT_PHONE": ["incorrect phone number-AR", "incorrect phone number-EN"],
-    "SUCCESS_EMAIL": ["email successfully registered -AR", "email successfully  registered -EN"],
-    "SUCCESS_PHONE": ["phone successfully registered -AR", "phone successfully registered -EN"],
-    "USER_NOT_FOUND": ["user not found -AR", "user not found -EN"],
-    "SUCCESS_USER": ["user successfully created -AR", "user successfully created -EN"],
-    "SUCCESS": ["successfully done -AR", "successfully done -EN"],
-    "UPDATE_PHONE": ["phone number successfully updated -AR", "update phone number successfully updated -EN"],
-    "EXIST_PHONE": ["phone number already exists try another one -AR", "phone number already exists try another one-EN"],
-    "FAILED": ["failed-AR", "failed-En"],
-    "EXIST_EMAIL": ["email already exists try another one-AR", "email already exists try another one-EN"]
+    "LOGGED_IN": ["تسجيل الدخول بنجاح", "successfully logged in"],
+    "OTP_SENT": ["OTP إرسالها بنجاح ", "otp sent successfully "],
+    "MISSING_PHONE": ["يرجى تسجيل رقم هاتف", "please register a phone number "],
+    "MISSING_EMAIL": ["يرجى تسجيل عنوان بريد إلكتروني", "please register a email address "],
+    "INCORRECT_OTP": ["OTP غير صحيحة", "incorrect otp "],
+    "INCORRECT_PHONE": ["رقم هاتف غير صحيح", "incorrect phone number"],
+    "SUCCESS_EMAIL": ["تم تسجيل البريد الإلكتروني بنجاح", "email successfully  registered "],
+    "SUCCESS_PHONE": ["الهاتف المسجلة بنجاح", "phone successfully registered "],
+    "USER_NOT_FOUND": ["لم يتم العثور على المستخدم", "user not found"],
+    "SUCCESS_USER": ["تم إنشاء المستخدم بنجاح", "user successfully created "],
+    "SUCCESS": ["تم بنجاح", "successfully done -EN"],
+    "UPDATE_PHONE": ["رقم الهاتف الذي تم تحديثه بنجاح", "update phone number successfully updated "],
+    "EXIST_PHONE": ["رقم الهاتف موجود بالفعل حاول واحد آخر", "phone number already exists try another one"],
+    "FAILED": ["فشل", "failed"],
+    "EXIST_EMAIL": ["البريد الإلكتروني موجود بالفعل حاول آخر واحد", "email already exists try another one"]
 }
 
 exports.languageFlag = (message, languageCode) => {
