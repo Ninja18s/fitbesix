@@ -307,13 +307,9 @@ exports.thirdpartyLogin = async (req, res, next) => {
     }
 
     else if (provider == 'Apple') {
-      if (!req.body.name) {
-        throw new Error('missing field')
-      }
+
       const idToken = req.body.token;
-      if (!idToken) {
-        throw new Error('missing token');
-      }
+
 
       const decoded = jwt.decode(idToken, { complete: true });
 
