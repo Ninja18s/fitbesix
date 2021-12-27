@@ -76,6 +76,17 @@ app.use("*", (req, res, next) => {
   logger.error(error);
   next(error);
 });
+app.use((err, req, res, next) => {
+  res.status(err.status || 500);
+  res.json({
+
+    status: err.status || 500,
+    resCode: 1,
+    msg: err.message,
+    message: 'FAILED'
+
+  })
+})
 
 
 

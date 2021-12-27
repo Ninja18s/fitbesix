@@ -226,10 +226,13 @@ function verifyJWT(token, appleKey) {
 }
 
 exports.thirdpartyLogin = async (req, res, next) => {
-  const { provider } = req.body;
+  const { provider, token } = req.body;
 
 
   try {
+    if (!(provider && token)) {
+      throw new Error("missing field");
+    }
     if (provider == "Google") {
 
 
@@ -287,6 +290,9 @@ exports.thirdpartyLogin = async (req, res, next) => {
     }
 
     else if (provider == 'Apple') {
+      if (!req.body.name) {
+        throw new Error('missing field')
+      }
       const idToken = req.body.token;
       if (!idToken) {
         throw new Error('missing token');
