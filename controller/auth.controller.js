@@ -279,7 +279,7 @@ exports.thirdpartyLogin = async (req, res, next) => {
           resCode: 0,
           message: "MISSING_PHONE",
 
-          userId: createUser,
+          user: createUser,
           screenId: 15,
 
 
@@ -335,7 +335,7 @@ exports.thirdpartyLogin = async (req, res, next) => {
           resCode: 0,
           message: "MISSING_PHONE",
 
-          userId: createUser,
+          user: createUser,
           screenId: 15,
 
 
@@ -349,7 +349,7 @@ exports.thirdpartyLogin = async (req, res, next) => {
         resCode: 0,
         message: "LOGGED_IN",
 
-        userId: createUser,
+        user: createUser,
         screenId: 16,
         refreshToken
 
