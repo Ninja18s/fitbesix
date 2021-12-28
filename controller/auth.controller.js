@@ -72,7 +72,7 @@ exports.login = async (req, res, next) => {
         resCode: 0,
         message: "SUCCESS_PHONE",
 
-        userId: user._id,
+        user,
         token,
         refreshToken,
         screenId: 16
@@ -279,7 +279,7 @@ exports.thirdpartyLogin = async (req, res, next) => {
           resCode: 0,
           message: "MISSING_PHONE",
 
-          userId: createUser._id,
+          userId: createUser,
           screenId: 15,
 
 
@@ -297,9 +297,8 @@ exports.thirdpartyLogin = async (req, res, next) => {
         resCode: 0,
         message: "LOGGED_IN",
 
-        userId: createUser._id,
+        user: createUser,
         screenId: 16,
-        token,
         refreshToken,
 
       })
@@ -336,7 +335,7 @@ exports.thirdpartyLogin = async (req, res, next) => {
           resCode: 0,
           message: "MISSING_PHONE",
 
-          userId: createUser._id,
+          userId: createUser,
           screenId: 15,
 
 
@@ -350,9 +349,8 @@ exports.thirdpartyLogin = async (req, res, next) => {
         resCode: 0,
         message: "LOGGED_IN",
 
-        userId: createUser._id,
+        userId: createUser,
         screenId: 16,
-        token,
         refreshToken
 
       })
