@@ -10,8 +10,11 @@ const authMiddleware = async (req, res, next) => {
 
     try {
         if (!token) {
-            logger.error('token missing')
-            throw new Error('token missing')
+            return res.status(403).send({
+                resCode: 1,
+                message: 'FAILED',
+                msg: "token expire"
+            })
         }
 
 
@@ -20,7 +23,11 @@ const authMiddleware = async (req, res, next) => {
         const decoded = jwt.verify(token, JWT_key, function (err, decoded) {
             if (err) {
 
-                throw new Error("token expire")
+                return res.status(403).send({
+                    resCode: 1,
+                    message: 'FAILED',
+                    msg: "token expire"
+                })
             }
             return decoded
         });
